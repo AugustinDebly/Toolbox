@@ -5,4 +5,4 @@ Hey, welcome to my toolbox! This is where I store all the small utility function
 This part is about creating scenarios for ElectricBlue intertidal chambers (https://electricblue.eu/intertidal-chamber) using R. The folder has a <code>functions.R</code> file where all the functions live, and it generates a <code>functions.RData</code> file that you can load directly in your own script. Check out <code>example_workflow.R</code> to see how it works.
 
 ## Scaling bias
-Just sharing here a repo on Zenodo about the scaling bias : https://zenodo.org/records/19693062
+Just sharing here a repo on Zenodo about the scaling bias : https://zenodo.org/records/19693062. The paper is on his way.
