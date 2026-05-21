@@ -11,11 +11,12 @@ load("functions.RData")
 ##Script------------------------------------------------------------------------
 
 name.dir        = "OUTPUTS"
-path.output.txt = paste(name.dir,"profile.txt",sep = "/")
+path.output.txt = paste(name.dir, "profile.txt", sep = "/")
+path.output.img = paste(name.dir, "profile.png", sep = "/")
+path.output.csv = paste(name.dir, "profile.csv", sep = "/")
 
 time.step       = 10*60      #[sec]
-duration.acclim = 1*24*60*60 #[sec]
-duration.exp    = 5*24*60*60 #[sec]
+duration        = 2*24*60*60 #[sec]
 
 day.start       = 18
 month.start     = 05
@@ -39,13 +40,15 @@ air.maxi        = 22
 wat.mini        = 16
 wat.maxi        = 16
 
+if(!dir.exists(name.dir)) dir.create(name.dir)
+
 time            = time.vector(day.start   = day.start, 
                               month.start = month.start, 
                               year.start  = year.start,
                               hour.start  = hour.start,
                               min.start   = min.start,
                               sec.start   = sec.start,
-                              duration    = duration.acclim + duration.exp,
+                              duration    = duration,
                               time.step   = time.step)
 
 time.low.tide   = time.vector(day.start   = day.start, 
@@ -66,19 +69,19 @@ time.maxi.temp  = time.vector(day.start   = day.start,
                               duration    = 0,
                               time.step   = 0)
 
-tempa            = cyclic.profile(shape     = "sinusoidal",
+tempa            = cyclic.profile(shape    = "sinusoidal",
                                  time      = time,
                                  mini      = air.mini,
                                  maxi      = air.maxi,
                                  time.maxi = time.maxi.temp)
 
-tempw            = cyclic.profile(shape     = "sinusoidal",
+tempw            = cyclic.profile(shape    = "sinusoidal",
                                  time      = time,
                                  mini      = wat.mini,
                                  maxi      = wat.maxi,
                                  time.maxi = time.maxi.temp)
 
-tide             = cyclic.profile(shape     = "step",
+tide             = cyclic.profile(shape    = "step",
                                  period    = 12*60*60,
                                  time      = time,
                                  mini      = 0,
@@ -100,10 +103,12 @@ light[tide == 1] = 0
 
 df               = data.frame(time, tempa, tempw, tide, light)
 
-txt.generator(data  = df,
-              time  = time,
-              tempa = tempa,
-              tempw = tempw,
-              tide  = tide,
-              light = light,
-              path.output = path.output.txt)
+txt.generator(data            = df,
+              time            = time,
+              tempa           = tempa,
+              tempw           = tempw,
+              tide            = tide,
+              light           = light,
+              path.output.txt = path.output.txt,
+              path.output.img = path.output.img,
+              path.output.csv = path.output.csv)

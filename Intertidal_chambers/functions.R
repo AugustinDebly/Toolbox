@@ -77,14 +77,16 @@ cyclic.profile <- function(shape    = NULL,
   return(output)
 }
 
-txt.generator <- function(data       = NULL,
-                         time        = NULL,
-                         temp        = NULL,
-                         tempa       = NULL,
-                         tempw       = NULL,
-                         tide        = NULL,
-                         light       = NULL,
-                         path.output = NULL) {
+txt.generator <- function(data           = NULL,
+                         time            = NULL,
+                         temp            = NULL,
+                         tempa           = NULL,
+                         tempw           = NULL,
+                         tide            = NULL,
+                         light           = NULL,
+                         path.output.txt = NULL,
+                         path.output.img = NULL,
+                         path.output.csv = NULL) {
   
   if (!is.null(data)) {
     if (is.null(time)  && "time"  %in% names(data)) time  = data$time
@@ -112,14 +114,59 @@ txt.generator <- function(data       = NULL,
   if (is.null(temp)) temp = ifelse(tide == 1, tempw, tempa)
   
   temp_txt = as.integer(temp * 10)
-  time_txt = as.numeric(difftime(TIME, as.POSIXct("1970-01-01", tz = "UTC", format = "%Y-%m-%d"), units = "secs"))
+  time_txt = as.numeric(difftime(time, as.POSIXct("1970-01-01", tz = "UTC", format = "%Y-%m-%d"), units = "secs"))
   
-  output = paste(time_txt, "-", temp_txt, tide, sprintf("%03d", light), rep(0, length(time)), sep = "")
+  output   = paste(time_txt, "-", temp_txt, tide, sprintf("%03d", light), rep(0, length(time)), sep = "")
   
-  if (!is.null(path.output)) {
-    writeLines(output, con = path.output)
+  if (!is.null(path.output.txt)) {
+    writeLines(output, con = path.output.txt)
   } else {
     return(output)
+  }
+  
+  if (!is.null(path.output.img)) {
+    packages   = c("ggplot2", "patchwork")
+    for (pkg in packages) {
+      if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+        install.packages(pkg)
+        library(pkg, character.only = TRUE)
+      }
+    }
+    plot.light = ggplot(data.frame(x = time, y = light), aes(x = x, y = y)) +
+      geom_line() +
+      labs(
+        x = "Time",
+        y = "Light"
+      ) +
+      theme_bw() +
+      theme(
+        axis.title.x = element_blank(),
+        axis.text.x  = element_blank()
+      )
+    plot.tide = ggplot(data.frame(x = time, y = tide), aes(x = x, y = y)) +
+      geom_line() +
+      labs(
+        x = "Time",
+        y = "Tide"
+      ) +
+      theme_bw() +
+      theme(
+        axis.title.x = element_blank(),
+        axis.text.x  = element_blank()
+      )
+    plot.temp = ggplot(data.frame(x = time, y = temp), aes(x = x, y = y)) +
+      geom_line() +
+      labs(
+        x = "Time",
+        y = "Temperature"
+      ) +
+      theme_bw()
+    plot.patchwork = plot.light/plot.tide/plot.temp
+    ggsave(plot.patchwork, file = path.output.img, height = 9, width = 9 * 4/3, units = "cm")
+  }
+  
+  if (!is.null(path.output.csv)) {
+    write.table(data, file = path.output.csv, row.names = F, sep = ";", dec = ".")
   }
 }
 
