@@ -6,8 +6,12 @@
 
 ##Path--------------------------------------------------------------------------
 
-SRFs_S2A = "SRFs/S2A/S2A.csv"
-SRFs_S2B = "SRFs/S2B/S2B.csv"
+SRFs_S2A    = "SRFs/S2A/S2A.csv"
+SRFs_S2B    = "SRFs/S2B/S2B.csv"
+SRF_G_M3M   = "SRFs/M3M/M3M_G.csv"
+SRF_NIR_M3M = "SRFs/M3M/M3M_NIR.csv"
+SRF_R_M3M   = "SRFs/M3M/M3M_R.csv"
+SRF_RE_M3M  = "SRFs/M3M/M3M_RE.csv"
 
 ##Functions---------------------------------------------------------------------
 
@@ -22,9 +26,9 @@ SRF_model <- function(x,a,b,c,d){
 }
 
 SRF_from_raw_data <- function(x,x_data_nm,y_data){
-  m   = matrix(rep(x_data_nm, each = length(x)), ncol = length(x_data_nm))
+  m = matrix(rep(x_data_nm, each = length(x)), ncol = length(x_data_nm))
   ind = apply(abs(m-x), 1, which.min)
-  return(y_data[ind])
+  return(ifelse(!((x<x_data_nm[1]) | (x>x_data_nm[length(x_data_nm)])),y_data[ind]/max(y_data),0))
 }
 
 #S2A
@@ -115,6 +119,26 @@ SRF_S2B_B12 <- function(x){
 }
 SRFs_S2B = list(SRF_S2B_B1,SRF_S2B_B2,SRF_S2B_B3,SRF_S2B_B4,SRF_S2B_B5,SRF_S2B_B6,SRF_S2B_B7,SRF_S2B_B8,SRF_S2B_B8A,SRF_S2B_B9,SRF_S2B_B10,SRF_S2B_B11,SRF_S2B_B12)
 
+#M3M
+data_M3M_G   = read.csv(SRF_G_M3M,header = T,sep=",")
+data_M3M_R   = read.csv(SRF_R_M3M,header = T,sep=",")
+data_M3M_RE  = read.csv(SRF_RE_M3M,header = T,sep=",")
+data_M3M_NIR = read.csv(SRF_NIR_M3M,header = T,sep=",")
+
+SRF_M3M_G <- function(x){
+  return(SRF_from_raw_data(x,data_M3M_G[[1]],data_M3M_G[[2]]))
+}
+SRF_M3M_R <- function(x){
+  return(SRF_from_raw_data(x,data_M3M_R[[1]],data_M3M_R[[2]]))
+}
+SRF_M3M_RE <- function(x){
+  return(SRF_from_raw_data(x,data_M3M_RE[[1]],data_M3M_RE[[2]]))
+}
+SRF_M3M_NIR <- function(x){
+  return(SRF_from_raw_data(x,data_M3M_NIR[[1]],data_M3M_NIR[[2]]))
+}
+SRFs_M3M = list(SRF_M3M_G,SRF_M3M_R,SRF_M3M_RE,SRF_M3M_NIR)
+
 ##Export RData------------------------------------------------------------------
 
-save(SRF_from_raw_data, SRF_model, SRFs_S2A, SRFs_S2B, file = "SRFs.RData")
+save.image(file = "SRFs.RData")
