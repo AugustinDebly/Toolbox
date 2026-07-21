@@ -9,3 +9,6 @@ This part is about spectral analysis of hyperspectral data. The SRFs folder cont
 
 ## Scaling bias
 Just sharing here a repo on Zenodo about the scaling bias : https://zenodo.org/records/19693062. The paper is on its way.
+
+## Underwater image correction
+I quickly created some R functions to visually correct underwater images. This was based on a simple method involving histogram equalisation, which is described in a review (https://doi.org/10.1371/journal.pone.0317306).
