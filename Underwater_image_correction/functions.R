@@ -35,7 +35,7 @@ correct_underwater_image <- function(input_path, output_path, lower_pct = 0.002,
   
   img_corrected        = flip(img_corrected)
   
-  writeRaster(img_corrected, output_path, overwrite = TRUE, datatype = "INT1U")
+  writeRaster(img_corrected, output_path, overwrite = TRUE)
 }
 
 ##Export RData------------------------------------------------------------------

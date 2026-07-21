@@ -19,7 +19,7 @@ output_dir  = "OUTPUT_images"
 
 name_images = list.files(input_dir, full.names = FALSE)
 p_input     = paste(input_dir, name_images, sep = "/")
-p_output    = paste(output_dir, paste(substr(name_images, 1, nchar(name_images) - 4), "_corrected.tif", sep = ""), sep = "/")
+p_output    = paste(output_dir, paste(substr(name_images, 1, nchar(name_images) - 4), "_corrected.png", sep = ""), sep = "/")
 
 for(i in seq(length(name_images))){
   pin  = p_input[i]
