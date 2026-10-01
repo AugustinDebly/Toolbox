@@ -12,3 +12,6 @@ Just sharing here a repo on Zenodo about the scaling bias : https://zenodo.org/r
 
 ## Underwater image correction
 I quickly created some R functions to visually correct underwater images. This was based on a simple method involving histogram equalisation, which is described in a review (https://doi.org/10.1371/journal.pone.0317306).
+
+## Ellipsoidal height to SHOM references
+This part is about converting ellipsoidal heights obtained from GPS, into SHOM altitudes (French Hydrographic Service). The conversion is made using the product "BathyElli" (https://refmar.shom.fr/bathyelli). Version 2.1 is used here, but any other version can be uploaded to a new folder in "INPUTS". The name of this folder should be changed to match the R script.
